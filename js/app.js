@@ -13,7 +13,7 @@ let midImageIndex;
 let rightImageIndex;
 let allProducts = [];
 
-let maxTries = 5;
+let maxTries = 25;
 let userTriesCounter = 0;
 
 // creat construction function for the products
@@ -27,6 +27,7 @@ function Product(name, source) {
 }
 
 Product.allProducts = [];
+
 
 // creat the instensess of the product
 new Product('bag', 'images/bag.jpg');
@@ -128,13 +129,22 @@ function handleClick(event) {
      
   let list=document.getElementById('productResults');
 
-  let productResult;
+  let button=document.getElementById('button');
+  button.addEventListener('click',showing);
 
-  for (let i = 0; i < Product.allProducts.length; i++) {
-    productResult=document.createElement('li');
-    list.appendChild(productResult);
+  button.hidden=false;
 
-    productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} votes and was shown ${Product.allProducts[i].shows}`
+  function showing() {
+    
+    let productResult;
+  
+    for (let i = 0; i < Product.allProducts.length; i++) {
+      productResult=document.createElement('li');
+      list.appendChild(productResult);
+  
+      productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} votes and was shown ${Product.allProducts[i].shows}`
+  }
+    button.removeEventListener('click',showing);
     
   }
       //  remove event listener

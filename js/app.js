@@ -155,6 +155,9 @@ function handleClick(event) {
   // console.log(Product.allProducts);
   renderThreeProducts();
   renderResults();
+ 
+  
+
 }
 
 

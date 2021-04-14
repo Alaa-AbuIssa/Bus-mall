@@ -13,6 +13,10 @@ let midImageIndex;
 let rightImageIndex;
 let allProducts = [];
 
+let namesArr=[];
+let votesArr=[];
+let shownArr=[];
+
 let maxTries = 25;
 let userTriesCounter = 0;
 
@@ -119,22 +123,31 @@ function handleClick(event) {
       Product.allProducts[rightImageIndex].votes++;
       Product.allProducts[rightImageIndex].shows++;
 
-    } else {
+    } else if (event.target.id === 'mid-Image'){
 
       Product.allProducts[midImageIndex].votes++;
       Product.allProducts[midImageIndex].shows++;
     }
+    else {
+        alert ('please click just on the pic');
+        userTriesCounter--;
+
+
+    }
 
 } else {
      
+
+  chart();
+
   let list=document.getElementById('productResults');
 
   let button=document.getElementById('button');
-  button.addEventListener('click',showing);
+  button.addEventListener('click',showingList);
 
   button.hidden=false;
 
-  function showing() {
+  function showingList() {
     
     let productResult;
   
@@ -144,7 +157,7 @@ function handleClick(event) {
   
       productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} votes and was shown ${Product.allProducts[i].shows}`
   }
-    button.removeEventListener('click',showing);
+    button.removeEventListener('click',showingList);
     
   }
       //  remove event listener
@@ -162,4 +175,47 @@ function handleClick(event) {
 
 
 
+//// from lab demo 
+
+
+// chart.js
+function chart() {
+  let ctx = document.getElementById('myChart').getContext('2d');
+  
+  let chart= new Chart(ctx,{
+    // what type is the chart
+   type: 'bar',
+
+  //  the data for showing
+   data:{
+    //  for the names
+      labels: namesArr,
+      
+      datasets: [
+        {
+        label: 'Goats votes',
+        data: votesArr,
+        backgroundColor: [
+          'rgb(251, 93, 76)',
+        ],
+  
+        borderWidth: 1
+      },
+
+      {
+        label: 'Goats shown',
+        data: shownArr,
+        backgroundColor: [
+          'black',
+        ],
+  
+        borderWidth: 1
+      }
+      
+    ]
+    },
+    options: {}
+  });
+  
+}
 

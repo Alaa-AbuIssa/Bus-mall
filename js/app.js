@@ -17,7 +17,7 @@ let namesArr=[];
 let votesArr=[];
 let shownArr=[];
 
-let maxTries = 25;
+let maxTries = 5;
 let userTriesCounter = 0;
 
 // creat construction function for the products
@@ -26,7 +26,7 @@ function Product(name, source) {
   this.source = source;
   this.votes = 0;
   this.shows = 0;
-
+  namesArr.push(this.name);
   Product.allProducts.push(this);
 }
 
@@ -65,34 +65,41 @@ function generateRandomIndex() {
 //   console.log(generateRandomIndex());
 
 // creat the function just to check that the three imgs not equal
-function renderThreeProducts() {
-  leftImageIndex = generateRandomIndex();
-  midImageIndex = generateRandomIndex();
-  rightImageIndex = generateRandomIndex();
 
-  while (
-    leftImageIndex === midImageIndex ||
-    leftImageIndex === rightImageIndex
-  ) {
-    leftImageIndex = generateRandomIndex();
-    renderThreeProducts();
-  }
-  while (
-    rightImageIndex === leftImageIndex ||
-    rightImageIndex === midImageIndex
-  ) {
-    rightImageIndex = generateRandomIndex();
-    renderThreeProducts();
+// creat a shown pics array
+let shownProductsArray=[];
+
+
+function renderThreeProducts() {
+console.log('before',shownProductsArray); 
+
+  leftImageIndex=generateRandomIndex();
+  midImageIndex=generateRandomIndex();
+  rightImageIndex=generateRandomIndex();
+
+  while (leftImageIndex===rightImageIndex ||leftImageIndex===midImageIndex || midImageIndex === rightImageIndex || shownProductsArray.includes(leftImageIndex || shownProductsArray.includes(rightImageIndex))) {
+    leftImageIndex=generateRandomIndex();
+    rightImageIndex=generateRandomIndex();
+    midImageIndex=generateRandomIndex();
   }
   // console.log(Product.allProducts[leftImageIndex].name);
   // console.log(Product.allProducts[midImageIndex].name);
   // console.log(Product.allProducts[rightImageIndex].source);
 
-  leftImageElement.src = Product.allProducts[leftImageIndex].source;
+  shownProductsArray=[leftImageIndex,rightImageIndex,midImageIndex];
+  console.log('after',shownProductsArray);
 
+
+  leftImageElement.src = Product.allProducts[leftImageIndex].source;
+  Product.allProducts[leftImageIndex].shows++;
+
+  
   rightImageElement.src = Product.allProducts[rightImageIndex].source;
+  Product.allProducts[rightImageIndex].shows++;
 
   midImageElement.src = Product.allProducts[midImageIndex].source;
+  Product.allProducts[midImageIndex].shows++;
+
 }
 
 renderThreeProducts();
@@ -116,17 +123,14 @@ function handleClick(event) {
     if (event.target.id === 'left-Image') {
 
       Product.allProducts[leftImageIndex].votes++;
-      Product.allProducts[leftImageIndex].shows++;
 
     } else if (event.target.id === 'right-Image') {
 
       Product.allProducts[rightImageIndex].votes++;
-      Product.allProducts[rightImageIndex].shows++;
 
     } else if (event.target.id === 'mid-Image'){
 
       Product.allProducts[midImageIndex].votes++;
-      Product.allProducts[midImageIndex].shows++;
     }
     else {
         alert ('please click just on the pic');
@@ -138,7 +142,11 @@ function handleClick(event) {
 } else {
      
 
-  chart();
+  for (let i = 0; i < Product.allProducts.length; i++) {
+    votesArr.push(Product.allProducts[i].votes);
+    shownArr.push(Product.allProducts[i].shows);
+    
+  }
 
   let list=document.getElementById('productResults');
 
@@ -162,60 +170,45 @@ function handleClick(event) {
   }
       //  remove event listener
       divElement.removeEventListener('click',handleClick);
-      
+      chartgenerator();
 
     }
   // console.log(Product.allProducts);
   renderThreeProducts();
-  renderResults();
- 
   
 
 }
-
-
-
-//// from lab demo 
-
-
-// chart.js
-function chart() {
-  let ctx = document.getElementById('myChart').getContext('2d');
-  
-  let chart= new Chart(ctx,{
-    // what type is the chart
-   type: 'bar',
-
-  //  the data for showing
-   data:{
-    //  for the names
+// Chart function
+function chartgenerator() {
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
       labels: namesArr,
-      
       datasets: [
         {
-        label: 'Goats votes',
-        data: votesArr,
-        backgroundColor: [
-          'rgb(251, 93, 76)',
-        ],
-  
-        borderWidth: 1
-      },
-
-      {
-        label: 'Goats shown',
-        data: shownArr,
-        backgroundColor: [
-          'black',
-        ],
-  
-        borderWidth: 1
-      }
-      
-    ]
+          label: '# of Votes',
+          data: votesArr,
+          backgroundColor: 'red',
+          borderColor: 'orange',
+          borderWidth: 2
+        },
+        {
+          label: '# of Shown',
+          data: shownArr,
+          backgroundColor: 'black',
+          borderColor: 'orange',
+          borderWidth: 2
+        }]
     },
-    options: {}
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
   });
-  
 }
-

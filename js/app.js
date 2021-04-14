@@ -17,7 +17,7 @@ let namesArr=[];
 let votesArr=[];
 let shownArr=[];
 
-let maxTries = 5;
+let maxTries = 25;
 let userTriesCounter = 0;
 
 // creat construction function for the products

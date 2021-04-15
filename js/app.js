@@ -148,7 +148,7 @@ function handleClick(event) {
   // Function to storage  products data to the local storage
   function updateStorage() {
     let productStringArray = JSON.stringify(allProducts);
-    // console.log(product string Array);
+    // console.log(productStringArray);
     localStorage.setItem('Products', productStringArray);
   }
 }

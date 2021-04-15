@@ -1,24 +1,19 @@
 'use strict';
 
-// get the div element
-let divElement = document.getElementById('all-Images');
-
-//get the left image element by id
+//get the images element by id
 let leftImageElement = document.getElementById('left-Image');
-let midImageElement = document.getElementById('mid-Image');
+let midImageElement = document.getElementById ('mid-Image');
 let rightImageElement = document.getElementById('right-Image');
 
-let leftImageIndex;
-let midImageIndex;
-let rightImageIndex;
-let allProducts = [];
 
+//define the global variable
+let userTriesCounter = 0;
+let maxTries =25;
+let allProducts = [];
 let namesArr=[];
 let votesArr=[];
 let shownArr=[];
 
-let maxTries = 25;
-let userTriesCounter = 0;
 
 // creat construction function for the products
 function Product(name, source) {
@@ -26,11 +21,12 @@ function Product(name, source) {
   this.source = source;
   this.votes = 0;
   this.shows = 0;
+
   namesArr.push(this.name);
-  Product.allProducts.push(this);
+  allProducts.push(this);
 }
 
-Product.allProducts = [];
+
 
 
 // creat the instensess of the product
@@ -55,129 +51,165 @@ new Product('usb', 'images/usb.gif');
 new Product('water-can', 'images/water-can.jpg');
 new Product('wine-glass', 'images/wine-glass.jpg');
 
-// console.log(Product.allProducts)
+// console.log(allProducts)
+
+
 
 // creat the function for generate random Number
 function generateRandomIndex() {
-  // 0 => 20
-  return Math.floor(Math.random() * Product.allProducts.length);
+  return Math.floor(Math.random() * allProducts.length);
 }
-//   console.log(generateRandomIndex());
-
-// creat the function just to check that the three imgs not equal
-
-// creat a shown pics array
-let shownProductsArray=[];
+generateRandomIndex();
 
 
+//define the images index
+let leftImageIndex;
+let midImageIndex;
+let rightImageIndex;
+
+
+// creat the function just to check that the three imgs not equal and render them 
 function renderThreeProducts() {
-console.log('before',shownProductsArray); 
 
   leftImageIndex=generateRandomIndex();
-  midImageIndex=generateRandomIndex();
+  midImageIndex= generateRandomIndex();
   rightImageIndex=generateRandomIndex();
+  
+  // define the shown product in an array 
+  let shownProductsArray=[];
 
+
+  // check that the three imgs not equal
   while (leftImageIndex===rightImageIndex ||leftImageIndex===midImageIndex || midImageIndex === rightImageIndex || shownProductsArray.includes(leftImageIndex || shownProductsArray.includes(rightImageIndex))) {
     leftImageIndex=generateRandomIndex();
     rightImageIndex=generateRandomIndex();
     midImageIndex=generateRandomIndex();
   }
-  // console.log(Product.allProducts[leftImageIndex].name);
-  // console.log(Product.allProducts[midImageIndex].name);
-  // console.log(Product.allProducts[rightImageIndex].source);
+  // console.log(allProducts[leftImageIndex].name);
+  // console.log (allProducts[rightImageIndex].source);
 
+
+ //declar the images index into shown array
   shownProductsArray=[leftImageIndex,rightImageIndex,midImageIndex];
-  console.log('after',shownProductsArray);
 
 
-  leftImageElement.src = Product.allProducts[leftImageIndex].source;
-  Product.allProducts[leftImageIndex].shows++;
+  leftImageElement.src = allProducts[leftImageIndex].source;
+  allProducts[leftImageIndex].shows++;
 
+  midImageElement.src = allProducts[midImageIndex].source;
+  allProducts[midImageIndex].shows++;
   
-  rightImageElement.src = Product.allProducts[rightImageIndex].source;
-  Product.allProducts[rightImageIndex].shows++;
+  rightImageElement.src =allProducts[rightImageIndex].source;
+  allProducts[rightImageIndex].shows++;
 
-  midImageElement.src = Product.allProducts[midImageIndex].source;
-  Product.allProducts[midImageIndex].shows++;
 
 }
 
 renderThreeProducts();
 
-// handle clicking by adding event listener1
+// get the div element
+let divElement = document.getElementById('all-Images');
+//  adding event listener for divelement
 divElement.addEventListener('click', handleClick);
 
+
+
+
+// if the attempts is lower than the max tries and function to handle it 
 function handleClick(event) {
-  console.log(event.target.id);
-
-  // add to attempts
-  userTriesCounter++;
-
-  // console.log(userTriesCounter);
-
-  // if the attempts is lower than the max tries
 
   
-  if (userTriesCounter <= maxTries) {
+  if (userTriesCounter <=maxTries) {
 
     if (event.target.id === 'left-Image') {
+      allProducts[leftImageIndex].votes++;
+      renderThreeProducts();
+      userTriesCounter++;
 
-      Product.allProducts[leftImageIndex].votes++;
 
     } else if (event.target.id === 'right-Image') {
-
-      Product.allProducts[rightImageIndex].votes++;
+      allProducts[rightImageIndex].votes++;
+      renderThreeProducts();
+      userTriesCounter++;
 
     } else if (event.target.id === 'mid-Image'){
+      allProducts[midImageIndex].votes++;
+      renderThreeProducts();
+      userTriesCounter++;
 
-      Product.allProducts[midImageIndex].votes++;
     }
     else {
         alert ('please click just on the pic');
         userTriesCounter--;
-
-
     }
 
 } else {
      
-
-  for (let i = 0; i < Product.allProducts.length; i++) {
-    votesArr.push(Product.allProducts[i].votes);
-    shownArr.push(Product.allProducts[i].shows);
-    
-  }
-
-  let list=document.getElementById('productResults');
-
   let button=document.getElementById('button');
-  button.addEventListener('click',showingList);
-
-  button.hidden=false;
-
-  function showingList() {
-    
-    let productResult;
   
-    for (let i = 0; i < Product.allProducts.length; i++) {
-      productResult=document.createElement('li');
-      list.appendChild(productResult);
+  divElement.removeEventListener('click',handleClick);
   
-      productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} votes and was shown ${Product.allProducts[i].shows}`
-  }
-    button.removeEventListener('click',showingList);
-    
-  }
-      //  remove event listener
-      divElement.removeEventListener('click',handleClick);
-      chartgenerator();
+  //creat the button and add an event for it click 
+  let list=document.getElementById('productResults');
+  
+  list.appendChild(button);
+  
 
+  button.hidden=false;  ;  
+  
+  
+    for (let i = 0; i < allProducts.length; i++) {
+      votesArr.push(allProducts[i].votes);
+      shownArr.push(allProducts[i].shows);
+      
     }
-  // console.log(Product.allProducts);
-  renderThreeProducts();
-  
+    updateStorage();
 
+    button.addEventListener('click',showingList);
+    button.addEventListener('click',chartgenerator);
+
+  }
+
+
+// Function to storage  products data to the local storage
+function updateStorage() {
+  let productStringArray = JSON.stringify(allProducts);
+  // console.log(stringVotesArray);
+  localStorage.setItem('Products', productStringArray);
+  }
 }
+
+
+
+
+// function for update products before any votes
+// Great thank for Anolla Haddad for helping
+function getProductsData() {
+  let productString = localStorage.getItem('Products');
+
+  let productArray = JSON.parse(productString);
+  // console.log(dataArray);
+
+  if (productArray !== null) {
+      allProducts = productArray;
+  }
+}
+
+
+    function showingList() {
+      
+      let productResult;
+    
+      for (let i = 0; i < Product.allProducts.length; i++) {
+        productResult=document.createElement('li');
+        list.appendChild(productResult);
+    
+        productResult.textContent=`${Product.allProducts[i].name} has ${Product.allProducts[i].votes} votes and was shown ${Product.allProducts[i].shows}`
+    }
+      button.removeEventListener('click',showingList);
+      
+    }
+  
 // Chart function
 function chartgenerator() {
   var ctx = document.getElementById('myChart').getContext('2d');
@@ -212,3 +244,4 @@ function chartgenerator() {
     }
   });
 }
+getProductsData();

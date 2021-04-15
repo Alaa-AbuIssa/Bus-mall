@@ -182,13 +182,12 @@ function updateStorage() {
 
 
 
-// function for update products before any votes
-// Great thank for Anolla Haddad for helping
+// function for update products before any votes 
+// with some friends helping 
 function getProductsData() {
   let productString = localStorage.getItem('Products');
 
   let productArray = JSON.parse(productString);
-  // console.log(dataArray);
 
   if (productArray !== null) {
       allProducts = productArray;

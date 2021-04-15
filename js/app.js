@@ -148,23 +148,26 @@ function handleClick(event) {
   // Function to storage  products data to the local storage
   function updateStorage() {
     let productStringArray = JSON.stringify(allProducts);
-    // console.log(stringVotesArray);
+    // console.log(product string Array);
     localStorage.setItem('Products', productStringArray);
   }
 }
 
-// function for update products before any votes
+// function for get the product data from the local storage
 // with some friends helping
 function getProductsData() {
   let productString = localStorage.getItem('Products');
 
+  // convert the prodct data back into normal object array
   let productArray = JSON.parse(productString);
 
+  // check the product array not empty to be in the safe side 
   if (productArray !== null) {
     allProducts = productArray;
   }
 }
 
+// function for render the product list
 function showingList() {
   let productResult;
 
